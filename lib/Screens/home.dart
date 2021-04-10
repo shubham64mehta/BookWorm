@@ -1,8 +1,10 @@
 import 'package:bookworm/Global/global.dart';
+import 'package:bookworm/MenuDashboard/menudashboardlayout.dart';
 import 'package:bookworm/Screens/review.dart';
 import 'package:bookworm/Screens/summary.dart';
 import 'package:bookworm/functions.dart';
 import 'package:bookworm/navigationbloc/navigationbloc.dart';
+import 'package:bookworm/search/search.dart';
 import 'package:delayed_display/delayed_display.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
@@ -181,7 +183,13 @@ class _MyCardsPageState extends State<MyCardsPage> {
               ),
               GestureDetector(
                 onTap: () {
-                  print(image1);
+                  //print(image1);
+                  // print(book1);
+                  //print(books[0].bookname);
+                  showSearch(
+                    context: context,
+                    delegate: Datasearch(),
+                  );
                 },
                 child: Center(
                   child: Card(
@@ -479,7 +487,7 @@ class _MyCardsPageState extends State<MyCardsPage> {
                                                                           context)
                                                                       .size
                                                                       .width /
-                                                                  5),
+                                                                  9),
                                                           if (check3 == false ||
                                                               check3 == null)
                                                             Material(
@@ -498,11 +506,16 @@ class _MyCardsPageState extends State<MyCardsPage> {
                                                                             FontWeight.bold)),
                                                                 onTap: () {
                                                                   showCupertinoModalBottomSheet(
+                                                                      backgroundColor:
+                                                                          HexColor(
+                                                                              '#232531'),
                                                                       context:
                                                                           context,
                                                                       builder:
                                                                           (context) {
                                                                         return Container(
+                                                                          color:
+                                                                              HexColor('#232531'),
                                                                           height: check == false
                                                                               ? MediaQuery.of(context).size.height / 1.8
                                                                               : MediaQuery.of(context).size.height / 3.7,
@@ -520,6 +533,7 @@ class _MyCardsPageState extends State<MyCardsPage> {
                                                                                           Padding(
                                                                                             padding: const EdgeInsets.all(20.0),
                                                                                             child: RatingBar.builder(
+                                                                                              unratedColor: CupertinoColors.systemGrey,
                                                                                               itemSize: 24,
                                                                                               initialRating: 0,
                                                                                               minRating: 1,
@@ -542,7 +556,7 @@ class _MyCardsPageState extends State<MyCardsPage> {
                                                                                           Material(
                                                                                             color: Colors.transparent,
                                                                                             child: IconButton(
-                                                                                                icon: Icon(CupertinoIcons.share, color: CupertinoColors.black),
+                                                                                                icon: Icon(CupertinoIcons.share, color: CupertinoColors.white),
                                                                                                 onPressed: () {
                                                                                                   if (rte >= 5) {
                                                                                                     five(snapshot1.data.value['uid']);
@@ -577,7 +591,7 @@ class _MyCardsPageState extends State<MyCardsPage> {
                                                                                                 child: TextFormField(
                                                                                                   controller: review1,
                                                                                                   textInputAction: TextInputAction.done,
-
+                                                                                                  style: TextStyle(color: CupertinoColors.white),
                                                                                                   //   keyboardType: TextInputType.multiline,
                                                                                                   maxLines: null,
                                                                                                   decoration: InputDecoration(

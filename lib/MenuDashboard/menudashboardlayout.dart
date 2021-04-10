@@ -3,6 +3,7 @@ import 'package:bookworm/Screens/favourite.dart';
 import 'package:bookworm/Screens/home.dart';
 import 'package:bookworm/Screens/setting1.dart';
 import 'package:bookworm/Screens/settings.dart';
+import 'package:bookworm/class/class%20.dart';
 import 'package:bookworm/navigationbloc/navigationbloc.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,8 @@ import 'dashboard.dart';
 import 'menu.dart';
 
 final Color backgroundColor = HexColor('#232531');
+
+//Map<dynamic, dynamic> mp;
 
 class MenuDashboardLayout extends StatefulWidget {
   @override
@@ -35,11 +38,40 @@ class _MenuDashboardLayoutState extends State<MenuDashboardLayout>
         .then((DataSnapshot snapshot) {
       Map<dynamic, dynamic> values;
       values = snapshot.value;
+      //image1.clear();
+      //book1.clear();
+      books.clear();
+      values.forEach((key, value) {
+        FirebaseDatabase.instance
+            .reference()
+            .child("Summary")
+            .child(key)
+            .once()
+            .then((DataSnapshot s) {
+          // book1.add(s.value);
+          bookname = s.value['book'];
+          imageurl = s.value['image'];
+          uid1 = s.value['uid'];
+          Book obj = new Book(bookname, imageurl, uid1);
+          books.add(obj);
+        });
+      });
+    });
+    read1();
+  }
 
-      for (int i = 0; i < values.length; i++) {
-        print(values);
-      }
-      /* values.forEach((key, value) {
+  Future<void> read1() async {
+    FirebaseDatabase.instance
+        .reference()
+        .child("Summary")
+        .once()
+        .then((DataSnapshot snapshot) {
+      Map<dynamic, dynamic> values;
+      values = snapshot.value;
+      //image1.clear();
+      //book1.clear();
+      books.clear();
+      values.forEach((key, value) {
         FirebaseDatabase.instance
             .reference()
             .child("Summary")
@@ -47,21 +79,9 @@ class _MenuDashboardLayoutState extends State<MenuDashboardLayout>
             .child("book")
             .once()
             .then((DataSnapshot s) {
-          print(s.value);
+          book1.add(s.value);
         });
-
-        FirebaseDatabase.instance
-            .reference()
-            .child("Summary")
-            .child(key)
-            .child("image")
-            .once()
-            .then((DataSnapshot s1) {
-          setState(() {
-            image1.add(s1.value);
-          });
-        });
-      });*/
+      });
     });
   }
 

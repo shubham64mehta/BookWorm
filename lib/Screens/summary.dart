@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:bookworm/Global/global.dart';
+import 'package:bookworm/MenuDashboard/menudashboardlayout.dart';
+import 'package:bookworm/class/class%20.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +26,7 @@ class _SummaryState extends State<Summary> {
   TextEditingController author = new TextEditingController();
   TextEditingController summary = new TextEditingController();
 
-  File image1;
+  File image2;
   final databaseReference = FirebaseDatabase.instance.reference();
   var uid = Uuid();
   final picker = ImagePicker();
@@ -36,10 +38,10 @@ class _SummaryState extends State<Summary> {
         imageQuality: 80,
       );
       this.setState(() {
-        image1 = File(file.path);
+        image2 = File(file.path);
       });
 
-      await uploadimage(image1).then((value) => {
+      await uploadimage(image2).then((value) => {
             setState(() {
               check = !check;
             })
@@ -116,6 +118,7 @@ class _SummaryState extends State<Summary> {
         setState(() {
           check = !check;
         });
+        read();
       });
     } else {
       print('Transaction not committed.');
@@ -130,6 +133,35 @@ class _SummaryState extends State<Summary> {
       "summary": summary.text,
       "userprofile": user1,
       "uid": uuid
+    });
+  }
+
+  Future<void> read() async {
+    FirebaseDatabase.instance
+        .reference()
+        .child("Summary")
+        .once()
+        .then((DataSnapshot snapshot) {
+      Map<dynamic, dynamic> values;
+      values = snapshot.value;
+      //image1.clear();
+      //book1.clear();
+      books.clear();
+      values.forEach((key, value) {
+        FirebaseDatabase.instance
+            .reference()
+            .child("Summary")
+            .child(key)
+            .once()
+            .then((DataSnapshot s) {
+          // book1.add(s.value);
+          bookname = s.value['book'];
+          imageurl = s.value['image'];
+          uid1 = s.value['uid'];
+          Book obj = new Book(bookname, imageurl, uid1);
+          books.add(obj);
+        });
+      });
     });
   }
 
